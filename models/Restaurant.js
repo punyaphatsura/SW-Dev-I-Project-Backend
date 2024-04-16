@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const RestaurantSchema = new mongoose.Schema(
   {
@@ -40,7 +40,7 @@ const RestaurantSchema = new mongoose.Schema(
   }
 );
 
-//Reverse populate with virtuals
+// Reverse populate with virtuals
 RestaurantSchema.virtual(`appointments`, {
   ref: `Appointment`,
   localField: `_id`,
@@ -48,7 +48,7 @@ RestaurantSchema.virtual(`appointments`, {
   justOne: false,
 });
 
-//cascade delete appointments when a restaurant is deleted
+// Cascade delete appointments when a restaurant is deleted
 RestaurantSchema.pre(
   `deleteOne`,
   { document: true, query: false },
@@ -59,4 +59,6 @@ RestaurantSchema.pre(
   }
 );
 
-module.exports = mongoose.model("Restaurant", RestaurantSchema);
+const Restaurant = mongoose.model("Restaurant", RestaurantSchema);
+
+export default Restaurant;
