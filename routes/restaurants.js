@@ -17,10 +17,7 @@ const router = express.Router();
 //re-route into other resourc routers
 // router.use("/:restaurantId/appointments/", appointmentRouter);
 
-router
-  .route("/")
-  .get(getRestaurants)
-  .post(createRestaurant);
+router.route("/").get(getRestaurants).post(createRestaurant);
 //  .post(protect, authorize("admin"), createRestaurant);
 router
   .route("/:id")
