@@ -19,7 +19,7 @@ export const getRestaurants = async (req, res, next) => {
   let queryStr = JSON.stringify(req.query);
   queryStr = queryStr.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
-    (match) => `$${match}`,
+    (match) => `$${match}`
   );
 
   query = Restaurant.find(JSON.parse(queryStr));
@@ -68,7 +68,7 @@ export const getRestaurants = async (req, res, next) => {
     }
     res.status(200).json({
       success: true,
-      count: Restaurant.length,
+      count: restaurants.length,
       pagination,
       data: restaurants,
     });
@@ -122,7 +122,7 @@ export const updateRestaurant = async (req, res, next) => {
       {
         new: true,
         runValidators: true,
-      },
+      }
     );
     if (!restaurant) {
       return res.status(400).json({ success: false });
