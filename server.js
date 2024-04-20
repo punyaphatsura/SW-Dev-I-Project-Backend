@@ -36,9 +36,10 @@ app.use("/api/v1/restaurants", restaurants);
 app.use("/api/v1/auth", auth);
 
 const PORT = process.env.PORT || 3000;
+console.log(process.env.FIREBASE_CONFIG);
 const server = app.listen(
   PORT,
-  console.log("Server running in "),
+  console.log("Server running in port", PORT),
   process.env.NODE_ENV,
   " mode on port ",
   PORT
