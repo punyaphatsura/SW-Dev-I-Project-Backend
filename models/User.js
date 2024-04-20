@@ -6,14 +6,8 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema(
   {
-    name: {
+    phoneNumber: {
       type: String,
-      required: [true, "Please add a name"],
-    },
-    telephone: {
-      type: String,
-      required: [true, "Please add a telephone number"],
-      unique: true,
     },
     email: {
       type: String,
@@ -26,11 +20,10 @@ const UserSchema = new Schema(
         "Please add a valid email",
       ],
     },
-    password: {
+    uid: {
       type: String,
-      required: [true, "Please add a password"],
-      minlength: 6,
-      select: false,
+      required: [true, "Please add a phoneNumber number"],
+      unique: true,
     },
     role: {
       type: String,
@@ -70,9 +63,9 @@ UserSchema.methods.getSignedJwtToken = function () {
 };
 
 // Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
+// UserSchema.methods.matchPassword = async function (enteredPassword) {
+//   return await bcrypt.compare(enteredPassword, this.password);
+// };
 
 const User = mongoose.model("User", UserSchema);
 
