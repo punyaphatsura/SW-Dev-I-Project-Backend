@@ -21,8 +21,10 @@ export const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id);
+    const app = await initializeAdmin();
+    const decoded = await app.auth().verifyIdToken(token);
+    console.log(decoded);
+    req.user = await User.findOne({ uid: decoded.uid });
     next();
   } catch (err) {
     console.error(err.stack);
