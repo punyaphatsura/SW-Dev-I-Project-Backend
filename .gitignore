@@ -174,3 +174,6 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# private key
+sw-dev-i-project-firebase-adminsdk-9wp5x-7d07cee382.json
