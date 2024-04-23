@@ -21,18 +21,17 @@ const RestaurantSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please add a province"],
     },
-    postalcode: {
-      type: String,
-      required: [true, "Please add a postalcode"],
-      maxlength: [5, "Postal Code can not be more than 5 digits"],
-    },
     tel: {
       type: String,
     },
-    region: {
+    opentime: {
       type: String,
-      required: [true, "Please add a region"],
+      required: [true, "Please add opentime"],
     },
+    closetime: {
+      type: String,
+      required: [true, "Please add closetime"],
+    }    
   },
   {
     toJSON: { virtuals: true },
