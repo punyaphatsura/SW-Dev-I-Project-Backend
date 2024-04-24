@@ -41,6 +41,7 @@ app.use(limiter);
 app.use(hpp());
 
 app.use("/api/v1/restaurants", restaurants);
+app.use("/api/v1/appointments", appointments);
 app.use("/api/v1/auth", auth);
 
 const PORT = process.env.PORT || 3000;
