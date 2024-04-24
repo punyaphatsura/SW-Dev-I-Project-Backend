@@ -134,7 +134,7 @@ export const updateRestaurant = async (req, res, next) => {
   }
 };
 
-//@desc     Update restaurants
+//@desc     Delete restaurants
 //@route    DELETE /api/v1/restaurants/:id
 //@access   Private
 export const deleteRestaurant = async (req, res, next) => {
