@@ -12,7 +12,7 @@ import hpp from "hpp";
 //Route files
 import { router as auth } from "./routes/auth.js";
 import { router as restaurants } from "./routes/restaurants.js";
-import { router as appointments } from "./routes/applications.js";
+import { router as appointments } from "./routes/appointments.js";
 
 dotenv.config({ path: "./config/config.env" });
 
