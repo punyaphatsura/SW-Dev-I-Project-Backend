@@ -8,15 +8,16 @@ import {
 } from "../controllers/restaurants.js"; // Ensure to add the file extension ".js" for ES module imports
 
 // Include other resource routers
-import appointmentRouter from "./appointments.js"; // Ensure to add the file extension ".js" for ES module imports
-import { protect, authorize } from '../middleware/auth';
+import { router as appointmentRouter } from "./appointments.js"; // Ensure to add the file extension ".js" for ES module imports
+import { protect, authorize } from "../middleware/auth.js";
 
 const router = express.Router();
 
 //re-route into other resourc routers
 router.use("/:restaurantId/appointments/", appointmentRouter);
 
-router.route("/")
+router
+  .route("/")
   .get(getRestaurants)
   .post(protect, authorize("admin"), createRestaurant);
 router

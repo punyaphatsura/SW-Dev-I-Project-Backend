@@ -31,12 +31,12 @@ const RestaurantSchema = new mongoose.Schema(
     closetime: {
       type: String,
       required: [true, "Please add closetime"],
-    }    
+    },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  },
+  }
 );
 
 // Reverse populate with virtuals
@@ -55,7 +55,7 @@ RestaurantSchema.pre(
     console.log(`Appointment being removed from restaurant ${this._id}`);
     await this.model(`Appointment`).deleteMany({ restaurant: this._id });
     next();
-  },
+  }
 );
 
 const Restaurant = mongoose.model("Restaurant", RestaurantSchema);

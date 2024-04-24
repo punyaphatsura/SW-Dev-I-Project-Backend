@@ -1,5 +1,5 @@
 import Restaurant from "../models/Restaurant.js";
-import { AppointmentSchema as Appointment } from "../models/Appointment";
+import { AppointmentSchema as Appointment } from "../models/Appointment.js";
 
 export const getAppointments = async (req, res, next) => {
   let query;
@@ -11,7 +11,9 @@ export const getAppointments = async (req, res, next) => {
     });
   } else {
     if (req.params.restaurantId) {
-      query = Appointment.find({ restaurant: req.params.restaurantId }).populate({
+      query = Appointment.find({
+        restaurant: req.params.restaurantId,
+      }).populate({
         path: "restaurant",
         select: "name province tel opentime closetime",
       });
@@ -81,7 +83,7 @@ export const addAppointment = async (req, res, next) => {
 
     const existedAppointments = await Appointment.find({ user: req.user.id });
 
-    if (existedAppointments.length >= 3 && req.user.role !== 'admin') {
+    if (existedAppointments.length >= 3 && req.user.role !== "admin") {
       return res.status(400).json({
         success: false,
         message: `The user with ID ${req.user.id} has already made 3 appointments.`,
@@ -113,7 +115,10 @@ export const updateAppointment = async (req, res, next) => {
       });
     }
 
-    if (appointment.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (
+      appointment.user.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
       return res.status(401).json({
         success: false,
         message: `User ${req.user.id} is not authorized to update this appointment.`,
@@ -147,7 +152,10 @@ export const deleteAppointment = async (req, res, next) => {
       });
     }
 
-    if (appointment.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (
+      appointment.user.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
       return res.status(401).json({
         success: false,
         message: `User ${req.user.id} is not authorized to delete this appointment.`,

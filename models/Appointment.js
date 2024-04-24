@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const AppointmentSchema = new mongoose.Schema({
+export const AppointmentSchema = new mongoose.Schema({
   apptDate: {
     type: Date,
     required: true,
@@ -20,5 +20,3 @@ const AppointmentSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
-export default AppointmentSchema;
