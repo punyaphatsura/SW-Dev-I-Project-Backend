@@ -6,10 +6,13 @@ import cookieParser from "cookie-parser";
 import mongoSanitize from "express-mongo-sanitize";
 import helmet from "helmet";
 import { xss } from "express-xss-sanitizer";
+import rateLimit from "express-rate-limit";
+import hpp from "hpp";
 
 //Route files
 import { router as auth } from "./routes/auth.js";
 import { router as restaurants } from "./routes/restaurants.js";
+import { router as appointments } from "./routes/applications.js";
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -28,9 +31,14 @@ app.use(mongoSanitize());
 app.use(helmet());
 //Prevent XSS attacks
 app.use(xss());
-// app.get("/", (req, res) => {
-//   res.status(200).json({ succes: true, data: { id: 1 } });
-// });
+//Rate Limiting
+const limiter = rateLimit({
+  windowsMs: 10 * 60 * 1000, //10 mins
+  max: 100,
+});
+app.use(limiter);
+//Prevent http param pollutions
+app.use(hpp());
 
 app.use("/api/v1/restaurants", restaurants);
 app.use("/api/v1/auth", auth);
