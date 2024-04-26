@@ -2,7 +2,7 @@
 
 header Sameple VacQ Sequence Diagram
 footer Page %page% of %lastpage%
-title "Manage Restaurant (PUT)"
+title "Manage Restaurant (UPDATE)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server

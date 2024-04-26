@@ -2,7 +2,7 @@
 
 header Sameple CappuGaewNung Sequence Diagram
 footer Page %page% of %lastpage%
-title "Manage Restaurant (POST)"
+title "Manage Restaurant (CREATE)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server

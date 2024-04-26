@@ -2,7 +2,7 @@
 
 header Sameple CappuGaewNung Sequence Diagram
 footer Page %page% of %lastpage%
-title "Manage Appointment (GET ALL)"
+title "Manage Appointment (GET Appointment for Restaurant)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
