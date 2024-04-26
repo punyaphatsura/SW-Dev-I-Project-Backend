@@ -1,8 +1,8 @@
-@startuml ManageAppointmentPost
+@startuml ManageAppointmentPut
 
-header Sameple CappuGaewNung Sequence Diagram
+header Sameple VacQ Sequence Diagram
 footer Page %page% of %lastpage%
-title "Manage Appointment (POST)"
+title "Manage Appointment (PUT)"
 
 participant "Client" as client
 participant "<<javaScript>>\n:server" as server
@@ -12,14 +12,14 @@ participant "<<controllers>>\n:appointments" as controllersAppointments
 participant "<<model>>\n:Appointment" as modelAppointment
 database "<<MongoDB>>\n:appointments" as AppointmentsDatabase
 
-client->server ++:req.post('/appointments')
-server->routerAppointments ++:app.use('/appointments', appointments)
+client->server ++:req.put('/api/v1/appointments/:id')
+server->routerAppointments ++:app.use('/api/v1/appointments', appointments)
 routerAppointments->middleware ++:protect(req, res, next)
-middleware->middleware ++:authorize("admin", "user")(req, res, next)
+middleware->middleware ++:authorize("admin","user")(req, res, next)
 
 alt authorize
-    middleware->controllersAppointments ++:addAppointment()
-    controllersAppointments->modelAppointment ++:create(req.body)
+    middleware->controllersAppointments ++:updateAppointment(req.params.id)
+    controllersAppointments->modelAppointment ++:put(req.params.id, req.body)
     modelAppointment ->AppointmentsDatabase ++: AppointmentSchema
     AppointmentsDatabase --> modelAppointment --: appointment
     controllersAppointments <-- modelAppointment --:appointment
@@ -27,5 +27,5 @@ alt authorize
 else not authorize
     middleware->client --:response
 end
-
+ 
 @enduml
