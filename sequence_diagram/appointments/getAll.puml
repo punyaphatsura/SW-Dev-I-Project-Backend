@@ -1,0 +1,32 @@
+@startuml ManageAppointmentGetAll
+
+header Sameple CappuGaewNung Sequence Diagram
+footer Page %page% of %lastpage%
+title "Manage Appointment (GET ALL)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<middleware>>\n:auth" as middleware
+participant "<<controllers>>\n:appointments" as controllersAppointments
+participant "<<model>>\n:Appointment" as modelAppointment
+database "<<MongoDB>>\n:Appointments" as AppointmentsDatabase
+
+client->server ++:req.get('/api/v1/appointments')
+server->routerAppointments ++:app.use('/api/v1/appointments', appointments)
+routerAppointments->middleware ++:protect(req, res, next)
+middleware->middleware ++:authorize("admin", "user")(req, res, next)
+
+alt authorize 
+    middleware->controllersAppointments ++:getAppointments()
+    controllersAppointments->modelAppointment ++:get()
+    modelAppointment ->AppointmentsDatabase ++: AppointmentSchema
+    AppointmentsDatabase --> modelAppointment --: appointment
+    controllersAppointments <-- modelAppointment --:appointment
+    controllersAppointments->client --:response
+
+else not authorize
+    middleware->client --:response
+end
+
+@enduml
