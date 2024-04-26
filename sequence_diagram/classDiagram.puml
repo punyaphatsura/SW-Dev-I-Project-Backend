@@ -1,0 +1,107 @@
+@startuml
+left to right direction
+package "CappuKaewNung" {
+    class "<<Application>>\nCappuGaewNungKinni" as Cappu {}
+
+    class "<<Resource>>\nHospitals" as ResourceHospitals {
+        <<GET>> +getHospitals(): Hospital
+        <<POST>> +createHospital(): Hospital
+    }
+
+    class "<<Resource>>\nHospital" as ResourceHospital {
+        <<GET>> +getHospital(): Hospital
+        <<PUT>> +updateHospital(): Hospital
+        <<DELETE>> +deleteHospital(): void
+    }
+
+    class "<<Resource>>\nAppointments" as ResourceAppointments {
+        <<GET>> +getAppointments(): Appointment[]
+        <<POST>> +addAppointment(): Appointment
+    }
+
+    class "<<Resource>>\nAppointment" as ResourceAppointment {
+        <<GET>> +getAppointment(): Appointment
+        <<PUT>> +updateAppointment(): Appointment
+        <<DELETE>> +deleteAppointment(): void
+    }
+
+    class "<<Resource>>\nRestaurants" as ResourceRestaurants {
+        <<GET>> +getRestaurants(): Restaurant[]
+        <<POST>> +createRestaurant(): Restaurant
+    }
+
+    class "<<Resource>>\nRestaurant" as ResourceRestaurant {
+        <<GET>> +getRestaurant(): Restaurant
+        <<PUT>> +updateRestaurant(): Restaurant
+        <<DELETE>> +deleteRestaurant(): void
+    }
+
+    class "<<Representation>>\nHospital" as RepresentationHospital {
+        - name: String
+        - address: String
+        - district: String
+        - province: String
+        - postalcode: String
+        - telephone: String
+        - region: String
+    }
+
+    class "<<Representation>>\nRestaurant" as RepresentationRestaurant {
+        - _id: ObjectId
+        - name: String
+        - address: String
+        - district: String
+        - province: String
+        - tel: String
+        - opentime: String
+        - closetime: String
+        - createdAt: Date
+    }
+
+    class "<<Representation>>\nAppointment" as RepresentationAppointment {
+        - apptDate: Date
+        - user: ObjectId
+        - restaurant: ObjectId
+        - createdAt: Date
+    }
+
+    class "<<Representation>>\nUser" as RepresentationUser {
+        - _id: ObjectId
+        - phoneNumber: String
+        - email: String
+        - uid: String
+        - role: String
+        - resetPasswordToken: String
+        - resetPasswordExpire: Date
+        - createdAt: Date
+        + getSignedJwtToken(): String
+    }
+
+    class "<<Resource>>\nAuth" as ResourceAuth {
+        <<POST>> +register(): void
+        <<POST>> +login(): void
+        <<GET>> +getMe(): User
+        <<GET>> +logout(): void
+        <<POST>> +checkToken(): void
+        <<POST>> +createUserWithToken(): void
+        <<POST>> +checkPhoneNumber(): void
+        <<POST>> +checkEmail(): void
+    }
+}
+
+Cappu ..> ResourceHospitals: "/hospitals\n<<Path>>"
+Cappu ..> ResourceAppointments: "/appointments\n<<Path>>"
+Cappu ..> ResourceRestaurants: "/restaurants\n<<Path>>"
+Cappu ..> ResourceAuth: "/auth\n<<Path>>"
+
+ResourceAppointments ..> ResourceAppointment: "/{appointmentId}\n<<Path>>"
+ResourceRestaurants ..> ResourceRestaurant: "/{restaurantId}\n<<Path>>"
+ResourceHospitals ..> ResourceHospital: "/{hospitalId}\n<<Path>>"
+
+ResourceHospital ..> RepresentationHospital: "<<use>>"
+ResourceAppointment ..> RepresentationAppointment: "<<use>>"
+ResourceRestaurant ..> RepresentationRestaurant: "<<use>>"
+ResourceRestaurant ..> ResourceAppointments: "/appointments\n<<Path>>"
+ResourceAuth ..> RepresentationUser: "<<use>>"
+
+@enduml
