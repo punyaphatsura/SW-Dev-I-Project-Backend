@@ -1,5 +1,5 @@
-@startuml
-title "Phone Number Verification and OTP Sign-In"
+@startuml Login with Phone Number and OTP Verification
+title "Login with Phone Number and OTP Verification"
 
 participant "Client" as client
 participant "Frontend" as frontend

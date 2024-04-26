@@ -1,5 +1,5 @@
-@startuml
-title "Google Sign-In and Token Validation"
+@startuml Login with Google Account
+title "Login with Google Account"
 
 participant "Client" as client
 participant "Frontend" as frontend

@@ -1,5 +1,5 @@
-@startuml
-title "User Validation and User Creation with Token"
+@startuml Register with Google Account
+title "Register with Google Account"
 
 participant "Client" as client
 participant "Frontend" as frontend

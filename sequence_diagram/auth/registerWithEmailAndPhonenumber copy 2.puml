@@ -1,5 +1,5 @@
-@startuml
-title "User Registration with Firebase, Phone Link, and OTP Verification"
+@startuml Registration with Firebase using email and password, Phone Link, and OTP Verification
+title "Registration with Firebase using email and password, Phone Link, and OTP Verification"
 
 participant "Client" as client
 participant "Frontend" as frontend

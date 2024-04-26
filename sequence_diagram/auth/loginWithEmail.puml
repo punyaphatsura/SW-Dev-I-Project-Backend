@@ -1,4 +1,4 @@
-@startuml
+@startuml Login with Email and Password
 title "Login with Email and Password"
 
 participant "Client" as client

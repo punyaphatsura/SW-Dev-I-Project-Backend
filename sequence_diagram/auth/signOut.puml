@@ -1,4 +1,4 @@
-@startuml
+@startuml Sign-Out
 title "Sign-Out"
 
 participant "Client" as client
