@@ -20,3 +20,7 @@ export const AppointmentSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+const Appointment = mongoose.model("Appointment", AppointmentSchema);
+
+export default Appointment;

@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
+import { initializeAdmin } from "../config/firebaseConfig.js";
+
 // Protect routes
 export const protect = async (req, res, next) => {
   let token;
@@ -25,6 +27,7 @@ export const protect = async (req, res, next) => {
     const decoded = await app.auth().verifyIdToken(token);
     console.log(decoded);
     req.user = await User.findOne({ uid: decoded.uid });
+    console.log("set req user", req.user);
     next();
   } catch (err) {
     console.error(err.stack);

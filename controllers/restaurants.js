@@ -140,6 +140,7 @@ export const updateRestaurant = async (req, res, next) => {
 export const deleteRestaurant = async (req, res, next) => {
   try {
     const restaurant = await Restaurant.findById(req.params.id);
+    console.log(restaurant);
     if (!restaurant) {
       return res.status(404).json({
         success: false,
@@ -148,6 +149,7 @@ export const deleteRestaurant = async (req, res, next) => {
     }
 
     await restaurant.deleteOne();
+    console.log("deleted");
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
     console.log(err);

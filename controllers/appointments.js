@@ -1,31 +1,34 @@
 import Restaurant from "../models/Restaurant.js";
-import { AppointmentSchema as Appointment } from "../models/Appointment.js";
+import Appointment from "../models/Appointment.js";
 
 export const getAppointments = async (req, res, next) => {
   let query;
-
-  if (req.user.role !== "admin") {
-    query = Appointment.find({ user: req.user._id }).populate({
-      path: "appointment",
-      select: "name province tel opentime closetime",
-    });
-  } else {
-    if (req.params.restaurantId) {
-      query = Appointment.find({
-        restaurant: req.params.restaurantId,
-      }).populate({
+  try {
+    if (req.user.role !== "admin") {
+      console.log("here");
+      query = Appointment.find({ user: req.user._id }).populate({
         path: "restaurant",
         select: "name province tel opentime closetime",
       });
     } else {
-      query = Appointment.find().populate({
-        path: "restaurant",
-        select: "name province tel opentime closetime",
-      });
+      console.log();
+      if (req.params.restaurantId) {
+        query = Appointment.find({
+          restaurant: req.params.restaurantId,
+        }).populate({
+          path: "restaurant",
+          select: "name province tel opentime closetime",
+        });
+      } else {
+        query = Appointment.find().populate({
+          path: "restaurant",
+          select: "name province tel opentime closetime",
+        });
+      }
     }
-  }
-  try {
+
     const appointments = await query;
+    console.log("--->", appointments);
     res.status(200).json({
       success: true,
       count: appointments.length,
@@ -107,7 +110,6 @@ export const addAppointment = async (req, res, next) => {
 export const updateAppointment = async (req, res, next) => {
   try {
     let appointment = await Appointment.findById(req.params.id);
-
     if (!appointment) {
       return res.status(404).json({
         success: false,
@@ -133,7 +135,7 @@ export const updateAppointment = async (req, res, next) => {
       data: appointment,
     });
   } catch (error) {
-    console.log(err);
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Cannot update Appointment",

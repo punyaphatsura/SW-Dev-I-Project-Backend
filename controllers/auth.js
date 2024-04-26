@@ -108,6 +108,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 export const checkIsTokenValid = async (req, res, next) => {
   try {
     const { token } = req.body;
+    console.log(token);
     // const token = req.headers.authorization;
     // console.log(req.body);
     if (!token || token === "null") {
