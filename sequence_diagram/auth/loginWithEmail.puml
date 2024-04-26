@@ -1,0 +1,20 @@
+@startuml Login with Email and Password
+title "Login with Email and Password"
+
+participant "Client" as client
+participant "Frontend" as frontend
+participant "<<Firebase>>\n:FirebaseAuth" as firebaseAuth
+
+client -> frontend ++ : Login with email and password
+frontend -> firebaseAuth ++ : signInWithEmailAndPassword(email, password)
+
+alt "Sign In Success"
+firebaseAuth --> frontend -- : Auth token (Success/Failure)
+frontend --> client -- : Return auth token to client
+
+else "Sign In Failure"
+firebaseAuth --> frontend -- : Sign-in failure (invalid credentials)
+frontend --> client -- : Error message (invalid credentials)
+end
+
+@enduml

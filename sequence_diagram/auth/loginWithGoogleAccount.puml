@@ -1,0 +1,39 @@
+@startuml Login with Google Account
+title "Login with Google Account"
+
+participant "Client" as client
+participant "Frontend" as frontend
+participant "<<Firebase>>\n:auth" as firebaseAuth
+participant "<<JavaScript>>\n:server" as server
+participant "<<router>>\n:auth" as routerAuth
+participant "<<controllers>>\n:auth" as controllersAuth
+participant "<<model>>\n:User" as modelUser
+database "<<MongoDB>>\n:UsersDatabase" as usersDatabase
+participant "Router" as router
+
+client -> frontend ++ : Sign in with Google
+frontend -> firebaseAuth ++ : signInWithPopup(provider)
+firebaseAuth --> frontend -- : Auth token (Bearer token)
+
+alt "Sign-In Success"
+frontend -> server ++ : req.post('/auth/checkToken')
+server -> routerAuth ++ : app.use("/auth")
+routerAuth -> controllersAuth ++ : Check token validity
+controllersAuth -> modelUser ++ : Find user by id
+modelUser -> usersDatabase ++ : Query with id
+usersDatabase --> modelUser -- : Query result
+modelUser --> controllersAuth -- : User found?
+
+alt "User Found (Token Valid)"
+controllersAuth --> frontend -- : Token valid
+frontend -> client -- : Redirect to success page
+
+else "User Not Found (Token Invalid, 404)"
+controllersAuth --> frontend -- : Error message (User not found)
+frontend --> client -- : Please register first
+end
+
+else "Sign-In Failure"
+frontend --> client -- : Sign-in failed
+end
+@enduml

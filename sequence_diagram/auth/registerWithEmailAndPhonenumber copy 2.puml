@@ -1,0 +1,58 @@
+@startuml Registration with Firebase using email and password, Phone Link, and OTP Verification
+title "Registration with Firebase using email and password, Phone Link, and OTP Verification"
+
+participant "Client" as client
+participant "Frontend" as frontend
+participant "<<JavaScript>>\n:server" as server
+participant "<<router>>\n:auth" as routerRegistration
+participant "<<controllers>>\n:auth" as controllersRegistration
+participant "<<model>>\n:User" as modelUser
+participant "<<Firebase>>\n:FirebaseAuth" as firebaseAuth
+database "<<MongoDB>>\n:UsersDatabase" as usersDatabase
+
+client -> frontend ++ : Register (email, password, role ,phone)
+frontend -> server ++ : req.post('/auth', phone)
+server -> routerRegistration ++ : app.use("/auth/check-phone", phone)
+routerRegistration -> controllersRegistration ++ : checkPhoneNumber(phone)
+controllersRegistration -> modelUser ++ : findOne(phone)
+modelUser -> usersDatabase ++ : Query for phone
+usersDatabase --> modelUser -- : Query result
+modelUser --> controllersRegistration -- : Query result
+controllersRegistration -> frontend : Result
+
+alt "Email/Phone Exists"
+frontend --> client -- : Rejection reason (email/phone exists)
+else "Email/Phone Does Not Exist"
+frontend -> firebaseAuth ++ : createUserWithEmailAndPassword(email, password)
+firebaseAuth --> frontend -- : Auth token
+frontend -> server ++ : If successful, send user info (email, phone, auth token)
+
+frontend -> firebaseAuth ++ : Link phone number (send OTP)
+firebaseAuth --> frontend -- : OTP sent
+
+frontend -> client ++ : Enter OTP
+client -> frontend ++ : OTP entered
+
+frontend -> firebaseAuth ++ : Verify OTP
+firebaseAuth --> frontend -- : OTP verification result (Success/Failure)
+
+
+alt "OTP Success"
+frontend -> firebaseAuth ++ : Link phone number to Firebase account
+firebaseAuth --> frontend -- : Phone number linked
+frontend -> server ++ : req.post('/auth/register', {email, phoneNumber, role, uid})
+server -> routerRegistration ++ : app.use("/auth", {email, phoneNumber, role, uid})
+routerRegistration -> controllersRegistration ++ : register(email, phoneNumber, role, uid)
+controllersRegistration -> modelUser ++ : Create user (email, phoneNumber, role, uid)
+modelUser -> usersDatabase ++ : Store new user
+usersDatabase --> modelUser -- : Store result
+modelUser --> controllersRegistration -- : User created
+
+controllersRegistration --> frontend -- : response
+frontend --> client -- : Registration successful
+
+else "OTP Failure"
+frontend --> client -- : OTP verification failed, retry or resend
+end
+end
+@enduml
