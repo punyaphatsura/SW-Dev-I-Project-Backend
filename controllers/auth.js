@@ -146,7 +146,8 @@ export const checkIsTokenValid = async (req, res, next) => {
 //@access private
 export const getMe = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = req.user;
+    console.log("user", user);
     res.status(200).json({
       success: true,
       data: user,
@@ -187,40 +188,6 @@ export const createUserWithToken = async (req, res, next) => {
   } catch (err) {
     res.status(400).json({ success: false, msg: `error: ${err}` });
   }
-
-  // let token;
-
-  // if (
-  //   req.headers.authorization &&
-  //   req.headers.authorization.startsWith("Bearer")
-  // ) {
-  //   token = req.headers.authorization.split(" ")[1];
-  // }
-
-  // // Make sure token exists
-  // if (!token || token === "null") {
-  //   return res.status(401).json({
-  //     success: false,
-  //     message: "No token found",
-  //   });
-  // }
-
-  // try {
-  //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  //   console.log(decoded);
-  //   req.user = await User.findById(decoded.id);
-  //   if (req.user) res.status(200).json({ success: true, msg: req.user });
-  // } catch (err) {
-  //   console.error(err.stack);
-  //   try {
-  //     const user = await getUserFromToken(req.headers.authorization);
-  //     console.log(user);
-  //     if (user) res.status(200).json({ success: true, msg: user });
-  //     else res.status(400).json({ success: false, msg: "invalid token" });
-  //   } catch (err) {
-  //     res.status(400).json({ success: true, msg: err });
-  //   }
-  // }
 };
 
 export const checkPhoneNumber = async (req, res) => {
