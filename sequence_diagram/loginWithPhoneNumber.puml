@@ -1,0 +1,43 @@
+@startuml
+title "Phone Number Verification and OTP Sign-In"
+
+participant "Client" as client
+participant "Frontend" as frontend
+participant "<<JavaScript>>\n:server" as server
+participant "<<router>>\n:auth" as routerAuth
+participant "<<controllers>>\n:auth" as controllersAuth
+participant "<<model>>\n:User" as modelUser
+participant "<<Firebase>>\n:FirebaseAuth" as firebaseAuth
+database "<<MongoDB>>\n:UsersDatabase" as usersDatabase
+
+client -> frontend ++ : Submit phone number
+frontend -> server ++ : req.post('/auth/check-phone', phoneNumber)
+server -> routerAuth ++ : app.use('auth',phoneNumber)
+routerAuth -> controllersAuth ++ : Check if phone number exists
+controllersAuth -> modelUser ++ : findOne(phoneNumber)
+modelUser -> usersDatabase ++ : Query for phone number
+usersDatabase --> modelUser -- : Query result
+modelUser --> controllersAuth -- : Query result
+
+alt "Phone Number Does Not Exists"
+controllersAuth --> frontend -- : response with 404
+frontend --> client -- : Error message (Failed to Verify this phone number)
+
+else "Phone Number Exist"
+frontend -> firebaseAuth ++ : signInWithPhoneNumber(phoneNumber)
+firebaseAuth --> frontend -- : Confirmation result
+
+frontend -> client ++ : Ask for OTP
+client -> frontend ++ : Enter OTP
+frontend -> firebaseAuth ++ : Verify OTP (confirmationResult, otp)
+
+alt "OTP Valid"
+firebaseAuth --> frontend -- : User signed in
+frontend -> client -- : Redirect to success page
+
+else "OTP Invalid"
+firebaseAuth --> frontend -- : Error verifying OTP
+frontend --> client -- : Error message (Failed to verify OTP)
+end
+end
+@enduml

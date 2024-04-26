@@ -1,0 +1,42 @@
+@startuml
+title "User Validation and User Creation with Token"
+
+participant "Client" as client
+participant "Frontend" as frontend
+participant "<<JavaScript>>\n:server" as server
+participant "<<router>>\n:auth" as routerAuth
+participant "<<controllers>>\n:auth" as controllersAuth
+participant "<<model>>\n:User" as modelUser
+participant "<<Firebase>>\n:FirebaseAuth" as firebaseAuth
+database "<<MongoDB>>\n:UsersDatabase" as usersDatabase
+
+client -> frontend ++ : Sign in with Google
+frontend -> firebaseAuth ++ : Sign in with Popup
+firebaseAuth --> frontend -- : Auth token (Bearer token)
+
+frontend -> server ++ : req.post('/auth/checkToken')
+server -> routerAuth ++ : app.use("/auth")
+routerAuth -> controllersAuth ++ : Check token validity
+controllersAuth -> modelUser ++ : Find user by id
+modelUser -> usersDatabase ++ : Query with id
+usersDatabase --> modelUser -- : Query result
+modelUser --> controllersAuth -- : Query result
+
+alt "Token Invalid (404)"
+controllersAuth --> frontend -- : Error message (User not found)
+frontend -> server ++ : req.post('/auth/createUserWithToken')
+server -> routerAuth ++ : app.use("/auth")
+routerAuth -> controllersAuth ++ : Create user with id and email
+controllersAuth -> modelUser ++ : Create new user
+modelUser -> usersDatabase ++ : Store new user data
+usersDatabase --> modelUser -- : User creation result
+modelUser --> controllersAuth -- : User created
+controllersAuth --> frontend -- : User creation successful
+frontend --> client -- : Redirect to success page
+
+else "Token Valid (User exists)"
+controllersAuth --> frontend -- : Error message (This email is already registered)
+frontend --> client -- : Display error message
+end
+
+@enduml

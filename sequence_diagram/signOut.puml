@@ -1,0 +1,19 @@
+@startuml
+title "Sign-Out"
+
+participant "Client" as client
+participant "Frontend" as frontend
+participant "firebaseAuth" as firebaseAuth
+
+client -> frontend ++ : Initiate sign-out
+frontend -> firebaseAuth ++ : signOut()
+firebaseAuth --> frontend -- : Sign-out successful?
+
+alt "Sign-Out Success"
+frontend -> client ++ : Redirect to home page
+
+else "Sign-Out Failure"
+firebaseAuth --> frontend -- : Error message
+frontend --> client -- : Display error message
+end
+@enduml
